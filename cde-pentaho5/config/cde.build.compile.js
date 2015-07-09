@@ -1,5 +1,5 @@
 /*
- * requirejs configuration file used to build the compiled/minified CDF js files.
+ * requirejs configuration file used to build the compiled/minified CDE js files.
  * Based on https://github.com/jrburke/r.js/blob/master/build/example.build.js
  */
 

@@ -31,8 +31,8 @@ public class EmbeddedHeadersGenerator {
   private final String REQUIRE_JS_CFG_START = "var requireCfg = {waitSeconds: 30, "
       + "paths: {}, shim: {}, map: {\"*\": {}}, bundles: {}, config: {service: {}}, packages: []};\n\n";
 
-  private final String CDF_LIB_PATH = "content/pentaho-cdf/js/lib/cdf-lib-require-js-cfg.js";
-  private final String CDF_PATH = "content/pentaho-cdf/js/cdf-require-js-cfg.js";
+  private final String CDF_LIB_PATH = "content/pentaho-cdf/js-modules/lib/cdf-lib-require-js-cfg.js";
+  private final String CDF_PATH = "content/pentaho-cdf/js-modules/cdf-require-js-cfg.js";
 
   private final String CDE_CORE_PATH = "content/pentaho-cdf-dd/js/cde-core-require-js-cfg.js";
   private final String CDE_PENTAHO_PATH = "content/pentaho-cdf-dd/js/cde-pentaho-require-js-cfg.js";

@@ -24,8 +24,8 @@ module.exports = function(config) {
     files: [
 
       // CDF
-      {pattern: 'bin/test-js/cdf/js/**/*.js', included: false},
-      {pattern: 'bin/test-js/cdf/js/**/*.css', included: false},
+      {pattern: 'bin/test-js/cdf/js-modules/**/*.js', included: false},
+      {pattern: 'bin/test-js/cdf/js-modules/**/*.css', included: false},
 
       //CDE
       {pattern: 'resource/resources/custom/amd-components/**/*.js', included: false},
@@ -38,21 +38,21 @@ module.exports = function(config) {
       'build-res/requireCfg-raw.js',
       'config/require-config.js',
       // fix 404 messages
-      {pattern: 'bin/test-js/cdf/js/**/*.png', watched: false, included: false, served: true},
-      {pattern: 'bin/test-js/cdf/js/**/*.gif', watched: false, included: false, served: true}
+      {pattern: 'bin/test-js/cdf/js-modules/**/*.png', watched: false, included: false, served: true},
+      {pattern: 'bin/test-js/cdf/js-modules/**/*.gif', watched: false, included: false, served: true}
 
     ],
 
     // list of files to exclude
     exclude: [
       'test-js/legacy/**/*.js',
-      'bin/test-js/cdf/js/cdf-module.js',
-      'bin/test-js/cdf/js/*-require-cfg.js',
-      'bin/test-js/cdf/js/lib/*-require-cfg.js',
-      'bin/test-js/cdf/js/compressed/**/*'
+      'bin/test-js/cdf/js-modules/cdf-module.js',
+      'bin/test-js/cdf/js-modules/*-require-cfg.js',
+      'bin/test-js/cdf/js-modules/lib/*-require-cfg.js',
+      'bin/test-js/cdf/js-modules/compressed/**/*'
     ],
 
-    preprocessors: {'resource/resources/custom/amd-components/**/*.js': 'coverage'},
+    //preprocessors: {'resource/resources/custom/amd-components/**/*.js': 'coverage'},
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
@@ -104,7 +104,7 @@ module.exports = function(config) {
     browsers: ['Chrome'],//, 'Firefox', 'IE', 'PhantomJS'],
 
     // If browser does not capture in given timeout [ms], kill it
-    captureTimeout: 60000,
+    captureTimeout: 600000,
 
     browserNoActivityTimeout: 600000,
 

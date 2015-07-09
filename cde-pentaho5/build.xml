@@ -471,7 +471,7 @@
                 <fail>Karma is not available, make sure Node.js is installed. Unit tests could not run.</fail>
               </then>
             </if>
-            <exec executable="${js.node.node_modules.bin.dir}\karma.cmd">
+            <exec executable="${js.node.node_modules.bin.dir}\karma.cmd" failonerror="true">
               <arg value="start"/>
               <arg value="${js.karma.ci.config}"/>
               <!-- if we are running via ant, then assume we must 'single-run' -->
@@ -487,7 +487,7 @@
                 <fail>Make sure Node.js is installed and run 'npm install -g karma-cli' [adds karma to the command line]</fail>
               </then>
             </if>
-            <exec executable="karma">
+            <exec executable="karma" failonerror="true">
               <arg value="start"/>
               <arg value="${js.karma.ci.config}"/>
               <!-- if we are running via ant, then assume we must 'single-run' -->
@@ -515,8 +515,8 @@
     <concat destfile="build-res/requireCfg-raw.js" append="true" force="yes">
       <!-- cdf require-js cfg files -->
       <fileset dir="${js.expanded.lib.dir}/pentaho-cdf" casesensitive="yes">
-        <include name="js/*-require-js-cfg.js"/>
-        <include name="js/lib/*-require-js-cfg.js"/>
+        <include name="js-modules/*-require-js-cfg.js"/>
+        <include name="js-modules/lib/*-require-js-cfg.js"/>
       </fileset>
       <!-- cde require-js cfg files -->
       <fileset dir="../cde-core/resource/js" casesensitive="yes">
