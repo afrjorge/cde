@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<DesignerComponent>
+  <Header>
+    <Name>Date Selector Component</Name>
+    <IName>DateSelectorComponent</IName>
+    <Description>Date Selector Component</Description>
+    <Category>SELECTORS</Category>
+    <CatDescription>Selects</CatDescription>
+    <Type>PalleteEntry</Type>
+    <Version>1.0</Version>
+  </Header>
+  <Contents>
+    <Model>
+      <!-- Standard CDE properties -->
+      <Property>executeAtStart</Property>
+      <Property>htmlObject</Property>
+      <Property>listeners</Property>
+      <Property>preExecution</Property>
+      <Property>postExecution</Property>
+      <Property>preChange</Property>
+      <Property>postChange</Property>
+
+      <Definition name="dashboardParameterMap">
+        <Property>date</Property>
+      </Definition>
+
+      <Definition name="componentDefinition">
+        <Property>inputFormat</Property>
+      </Definition>
+    </Model>
+    <Implementation>
+      <CustomProperties>
+        <DesignerProperty>
+          <Header>
+            <Name>date</Name>
+            <Parent>BaseProperty</Parent>
+            <DefaultValue></DefaultValue>
+            <Description>Date Parameter</Description>
+            <Tooltip>Dashboard parameter to bind to the selector date value </Tooltip>
+            <InputType>Parameter</InputType>
+            <OutputType>String</OutputType>
+            <Order>100</Order>
+            <Advanced>false</Advanced>
+            <Version>1.0</Version>
+          </Header>
+        </DesignerProperty>
+
+        <DesignerProperty>
+          <Header>
+            <Name>inputFormat</Name>
+            <Parent>BaseProperty</Parent>
+            <DefaultValue>YYYY-MM-DD</DefaultValue>
+            <Description>Input Format</Description>
+            <Tooltip>Format of the dashboard date parameters </Tooltip>
+            <InputType>String</InputType>
+            <OutputType>String</OutputType>
+            <Order>201</Order>
+            <Advanced>false</Advanced>
+            <Version>1.0</Version>
+          </Header>
+        </DesignerProperty>
+      </CustomProperties>
+    </Implementation>
+  </Contents>
+</DesignerComponent>
