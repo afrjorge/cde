@@ -24,4 +24,6 @@ public interface IPluginResourceLocationManager {
   public String getStyleResourceLocation( String styleName );
 
   List<PathOrigin> getCustomComponentsLocations();
+
+  List<PathOrigin> getCustomPropertiesLocations();
 }

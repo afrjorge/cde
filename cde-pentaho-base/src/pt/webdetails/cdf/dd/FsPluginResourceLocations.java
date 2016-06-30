@@ -27,8 +27,9 @@ import pt.webdetails.cpf.plugins.PluginsAnalyzer.PluginPair;
 public final class FsPluginResourceLocations
 {
 
-  private List<PathOrigin> customComponentDirectories = new ArrayList<PathOrigin>(); 
-  
+  private List<PathOrigin> customComponentDirectories = new ArrayList<PathOrigin>();
+  private List<PathOrigin> customPropertyDirectories = new ArrayList<PathOrigin>();
+
   protected static final Log logger = LogFactory.getLog(FsPluginResourceLocations.class);
 
   public FsPluginResourceLocations()
@@ -39,6 +40,9 @@ public final class FsPluginResourceLocations
 
   public List<PathOrigin> getCustomComponentLocations() {
     return customComponentDirectories;
+  }
+  public List<PathOrigin> getCustomPropertyLocations() {
+    return customPropertyDirectories;
   }
   private void initLocations() {
 
@@ -62,7 +66,18 @@ public final class FsPluginResourceLocations
           logger.debug(String.format("Found CDE components location declared in %s [%s]", entry.getPlugin().getId(), path));
         }
       }
-
+    }
+    // FIXME will fail often if not everytime
+    for (PluginPair<List<Element>> entry : pluginsAnalyzer.getPluginsWithSection("/cde-properties/path")) {
+      for (Element pathNode : entry.getValue()) {
+        String path = StringUtils.strip( pathNode.getStringValue() );
+        String origin = pathNode.attributeValue("origin");//TODO:hcoded
+        if (StringUtils.isEmpty(origin)) {
+          //FIXME:
+          customPropertyDirectories.add(inferPathOriginFromLegacyLocation(entry.getPlugin(), path));
+          logger.debug(String.format("Found CDE properties location declared in %s [%s]", entry.getPlugin().getId(), path));
+        }
+      }
     }
   }
 

@@ -26,6 +26,7 @@
             <Property>expression</Property>
             <Property>successCallback</Property>
             <Property>failureCallback</Property>
+            <Property>myCustomProp</Property>
         </Model>
         <Implementation>
             <CustomProperties>

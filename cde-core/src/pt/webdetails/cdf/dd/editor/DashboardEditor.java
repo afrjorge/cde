@@ -16,12 +16,16 @@ package pt.webdetails.cdf.dd.editor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.dom4j.Element;
 import pt.webdetails.cdf.dd.CdeConstants;
 import pt.webdetails.cdf.dd.CdeEngine;
 import pt.webdetails.cdf.dd.ResourceManager;
@@ -29,8 +33,11 @@ import pt.webdetails.cdf.dd.extapi.ICdeApiPathProvider;
 import pt.webdetails.cdf.dd.render.DependenciesManager;
 import pt.webdetails.cdf.dd.structure.DashboardWcdfDescriptor;
 import pt.webdetails.cdf.dd.util.CdeEnvironment;
+import pt.webdetails.cdf.dd.util.GenericBasicFileFilter;
 import pt.webdetails.cpf.Util;
 import pt.webdetails.cpf.context.api.IUrlProvider;
+import pt.webdetails.cpf.packager.origin.PathOrigin;
+import pt.webdetails.cpf.repository.api.IBasicFile;
 import pt.webdetails.cpf.repository.api.IReadAccess;
 import pt.webdetails.cpf.utils.CharsetHelper;
 
@@ -77,9 +84,11 @@ public class DashboardEditor {
     final HashMap<String, String> tokens = new HashMap<String, String>();
 
     // Decide whether we're in debug mode (full-size scripts) or normal mode (minified scripts)
-    final String scriptDeps = debugMode
+    final String _scriptDeps_ = debugMode
         ? getResource( resMgr, sysReader, CdeConstants.DESIGNER_SCRIPTS_RESOURCE )
         : depMgr.getPackage( DependenciesManager.StdPackages.EDITOR_JS_INCLUDES ).getDependencies( true );
+
+    final String scriptDeps = addExternalPluginScriptDeps( _scriptDeps_ );
 
     final String styleDeps = debugMode
         ? getResource( resMgr, sysReader, CdeConstants.DESIGNER_STYLES_RESOURCE )
@@ -112,6 +121,40 @@ public class DashboardEditor {
     return tokens;
   }
 
+  private static String addExternalPluginScriptDeps( String scriptDeps ) {
+    StringBuilder sb = new StringBuilder( scriptDeps );
+    // POC - load external plugin custom properties renderers
+    for ( PathOrigin origin : CdeEnvironment.getPluginResourceLocationManager().getCustomPropertiesLocations() ) {
+      logger.info( "reading external plugin custom properties from " + origin );
+
+      GenericBasicFileFilter filter = new GenericBasicFileFilter( null, "js" );
+      //IReadAccess access = origin.getReader( contentAccessFactory );
+      IReadAccess access = origin.getReader( CdeEnvironment.getContentAccessFactory() );
+      List<IBasicFile> filesList = access.listFiles( null, filter, IReadAccess.DEPTH_ALL, false, true );
+
+      if ( filesList != null ) {
+        logger.debug( String.format( "%d sub-folders found", filesList.size() ) );
+        IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
+        Arrays.sort( filesArray, getFileComparator() );
+        for ( IBasicFile file : filesArray ) {
+          // TODO: get plugin path prefix
+          sb.append( "\n<script language=\"javascript\" type=\"text/javascript\"\n"
+            + "              src=\"/pentaho/api/repos/pentaho-cdf/resources/cde-properties/"
+            + file.getName() + "\"/></script>" );
+        }
+      }
+    }
+    return sb.toString();
+  }
+
+  private static Comparator<IBasicFile> getFileComparator() {
+    return new Comparator<IBasicFile>() {
+      @Override
+      public int compare( IBasicFile file1, IBasicFile file2 ) {
+        return file1.getFullPath().toLowerCase().compareTo( file2.getFullPath().toLowerCase() );
+      }
+    };
+  }
 
   private static String getProcessedEditor(
       String wcdfPath,
@@ -163,7 +206,7 @@ public class DashboardEditor {
   }
 
   private static String getResource( ResourceManager resMgr, IReadAccess sysReader, String path ) throws IOException {
-    final String resource;
+    String resource;
     if ( resMgr.existsInCache( path ) ) {
       resource = resMgr.getResourceFromCache( path );
     } else {

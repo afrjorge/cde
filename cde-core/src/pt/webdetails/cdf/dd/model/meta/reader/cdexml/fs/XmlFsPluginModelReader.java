@@ -147,14 +147,38 @@ public final class XmlFsPluginModelReader {
   }
 
   private void readCustomProperties( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory )
-      throws ThingReadException {
+    throws ThingReadException {
 
-    logger.info( String.format( "Loading CUSTOM properties from: %s", CUSTOM_PROPS_DIR ) );
+    logger.info( String.format( "Loading CDE custom properties from: %s", CUSTOM_PROPS_DIR ) );
 
     List<IBasicFile> filesList = CdeEnvironment.getPluginSystemReader( CUSTOM_PROPS_DIR ).listFiles( null,
-        new GenericBasicFileFilter( CUSTOM_PROPS_FILENAME, DEFINITION_FILE_EXT ), IReadAccess.DEPTH_ALL );
+      new GenericBasicFileFilter( CUSTOM_PROPS_FILENAME, DEFINITION_FILE_EXT ), IReadAccess.DEPTH_ALL );
 
     if ( filesList != null ) {
+      IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
+      Arrays.sort( filesArray, getFileComparator() );
+      for ( IBasicFile file : filesArray ) {
+        this.readPropertiesFile( model, factory, file );
+      }
+    }
+
+    // external plugin custom properties
+    for ( PathOrigin origin : CdeEnvironment.getPluginResourceLocationManager().getCustomPropertiesLocations() ) {
+      readCustomPropertiesLocation( model, factory, origin );
+    }
+  }
+  private void readCustomPropertiesLocation( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory,
+                                             PathOrigin origin )
+      throws ThingReadException {
+
+    logger.info( "reading external plugin custom properties from " + origin );
+
+    GenericBasicFileFilter filter = new GenericBasicFileFilter( null, DEFINITION_FILE_EXT );
+    IReadAccess access = origin.getReader( contentAccessFactory );
+    List<IBasicFile> filesList = access.listFiles( null, filter, IReadAccess.DEPTH_ALL, false, true );
+
+    if ( filesList != null ) {
+      logger.debug( String.format( "%d sub-folders found", filesList.size() ) );
       IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
       Arrays.sort( filesArray, getFileComparator() );
       for ( IBasicFile file : filesArray ) {

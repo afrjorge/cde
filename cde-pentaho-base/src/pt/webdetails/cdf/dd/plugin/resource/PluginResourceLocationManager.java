@@ -13,7 +13,7 @@ import pt.webdetails.cpf.repository.api.IReadAccess;
 
 public class PluginResourceLocationManager implements IPluginResourceLocationManager {
 
-  private FsPluginResourceLocations componentLocator;
+  private FsPluginResourceLocations resourceLocator;
 
   public IReadAccess[] getAllCustomComponentsResourceLocations() {
     throw new NotImplementedException( "shouldn't be using this anymore" );
@@ -30,9 +30,16 @@ public class PluginResourceLocationManager implements IPluginResourceLocationMan
   }
 
   public synchronized List<PathOrigin> getCustomComponentsLocations() {
-    if ( componentLocator == null ) {
-      componentLocator = new FsPluginResourceLocations();
+    if ( resourceLocator == null ) {
+      resourceLocator = new FsPluginResourceLocations();
     }
-    return componentLocator.getCustomComponentLocations();
+    return resourceLocator.getCustomComponentLocations();
+  }
+
+  public synchronized List<PathOrigin> getCustomPropertiesLocations() {
+    if ( resourceLocator == null ) {
+      resourceLocator = new FsPluginResourceLocations();
+    }
+    return resourceLocator.getCustomPropertyLocations();
   }
 }
