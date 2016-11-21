@@ -53,8 +53,7 @@ public class XmlFsPluginModelReaderTest extends TestCase {
   private static XmlFsPluginThingReaderFactory factory;
   private static IReadAccess mockedReadAccess;
 
-  private static final String TEST_DIR = Utils.joinPath( System.getProperty( "user.dir" ), "test-resources" );
-  private static final String RESOURCE_DIR = Utils.joinPath( TEST_DIR, "resource" );
+  private static final String RESOURCE_DIR = Utils.joinPath( System.getProperty( "user.dir" ), "resource" );
   private static final String DUMMY_XML =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?><DesignerComponent></DesignerComponent>";
   private static final String BASE_PROPERTIES_MATCHER = "base/properties";
