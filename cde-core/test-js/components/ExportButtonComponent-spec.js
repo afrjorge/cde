@@ -40,7 +40,6 @@ define([
       listeners: []
     });
 
-
     var tableDefinition = {
      colHeaders: ["Customers", "Sales"],
      colTypes: ['string', 'numeric'],
@@ -53,30 +52,27 @@ define([
      jndi: "SampleData",
      colSearchable: ["0"],
      query: function() {
-     return "SELECT NON EMPTY {[Measures].[Sales]} ON COLUMNS, "
-           + "NON EMPTY TopCount([Customers].[All Customers].Children, 50.0, [Measures].[Sales]) "
-           + "ON ROWS FROM [SteelWheelsSales]";
-      }
-    }
+       return "SELECT NON EMPTY {[Measures].[Sales]} ON COLUMNS, " +
+              "NON EMPTY TopCount([Customers].[All Customers].Children, 50.0, [Measures].[Sales]) " +
+              "ON ROWS FROM [SteelWheelsSales]";
+     }
+    };
 
     var tableWithFilter= new TableComponent({	 
-        type: "TableComponent",
-        name: "table",
-        htmlObject: "SampleTable",
-        executeAtStart: true,
-        chartDefinition: tableDefinition,
-        postExecution: function() {  
+      type: "TableComponent",
+      name: "table",
+      htmlObject: "SampleTable",
+      executeAtStart: true,
+      chartDefinition: tableDefinition,
+      postExecution: function() {
         $("#"+this.htmlObject).prepend('<input value="wrong">');
-       }
+      }
     });
-
 
     dashboard.addComponent(exportButtonComponent);
 
-
     // inject sampleObject div
     var $htmlObject = $('<div>').attr('id', exportButtonComponent.htmlObject);
-
 
     /**
      * ## The Export Button Component # allows a dashboard to execute update
@@ -103,16 +99,15 @@ define([
     var expected = "right";
     
     /**
-     * ## The Export Button Component # discern between a input and the filter input
+     * ## The Export Button Component # discern between an input and the filter input
      */
-    
-    it("discern between a input and the filter input",function(done) {
-      $('body').append($htmlObject);
-      $('body').append($htmlObject2);
+    it("discern between an input and the filter input",function(done) {
+      $('body').append($htmlObject)
+               .append($htmlObject2);
       spyOn(exportButtonComponent, 'getFilterSettings').and.callThrough();
       spyOn($, 'ajax').and.callFake(function(params) {
-      params.success('{"metadata":["Sales"],"values":[["Euro+ Shopping Channel","914.11"],["Mini Gifts Ltd.","6558.02"]]}');
-    });
+        params.success('{"metadata":["Sales"],"values":[["Euro+ Shopping Channel","914.11"],["Mini Gifts Ltd.","6558.02"]]}');
+      });
 
       tableWithFilter.once("cdf:postExecution",function() {
         $("[type=search]").val('right');
@@ -142,7 +137,10 @@ define([
         outputType: "csv",
         listeners: []
       });
-      expect(exportButtonComponentWithFullDataExport.getFilterSettings(exportButtonComponentWithFullDataExport).exportPage).toEqual(false);
-    })
-   })
+
+      expect(
+        exportButtonComponentWithFullDataExport.getFilterSettings(exportButtonComponentWithFullDataExport).exportPage
+      ).toEqual(false);
+    });
+   });
   });
