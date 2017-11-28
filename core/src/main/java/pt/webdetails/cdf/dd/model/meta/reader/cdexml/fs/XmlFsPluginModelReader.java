@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -40,6 +41,7 @@ import pt.webdetails.cdf.dd.model.core.reader.ThingReadException;
 import pt.webdetails.cdf.dd.model.meta.CustomComponentType;
 import pt.webdetails.cdf.dd.model.meta.PrimitiveComponentType;
 import pt.webdetails.cdf.dd.model.meta.WidgetComponentType;
+import pt.webdetails.cdf.dd.osgi.CdeBundleActivator;
 import pt.webdetails.cpf.packager.origin.PluginRepositoryOrigin;
 import pt.webdetails.cpf.packager.origin.RepositoryPathOrigin;
 import pt.webdetails.cpf.packager.origin.StaticSystemOrigin;
@@ -144,15 +146,23 @@ public final class XmlFsPluginModelReader {
     //List<IBasicFile> filesList = CdeEnvironment.getPluginSystemReader( BASE_PROPS_DIR ).listFiles( null,
     //  new GenericBasicFileFilter( null, DEFINITION_FILE_EXT ), IReadAccess.DEPTH_ALL );
     //File[] filesArray = new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/base/properties").listFiles();
-    Collection<File> filesList = FileUtils.listFiles(
+    /*Collection<File> filesList = FileUtils.listFiles(
         new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/base/properties"),
         new String[]{"xml"},
-        true);
+        true);*/
+    Enumeration<URL> filesList = null;
+    try {
+      filesList = CdeBundleActivator.getCdeBundle().getResources("xmls");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     if ( filesList != null ) {
       //IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
       //Arrays.sort( filesArray, getFileComparator() );
-      for ( File file : filesList ) {
+      File file;
+      while ( filesList.hasMoreElements() ) {
+        file = new File( filesList.nextElement().getFile() );
         if (file.getName().toLowerCase().endsWith(".xml") && file.isFile()) this.readPropertiesFile( model, factory, file );
       }
     }

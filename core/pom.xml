@@ -38,6 +38,9 @@
     <jackson-mapper-asl.version>1.9.3</jackson-mapper-asl.version>
 
     <fasterxml.jackson.version>2.9.2</fasterxml.jackson.version> <!-- 2.5.4, 2.5.0 - 3.0.0 -->
+
+    <osgi.version>4.3.1</osgi.version>
+    <felix-configadmin.version>1.8.8</felix-configadmin.version>
   </properties>
 
   <dependencies>
@@ -445,6 +448,19 @@
       </exclusions>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>${osgi.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <!--dependency>
+      <groupId>org.apache.felix</groupId>
+      <artifactId>org.apache.felix.configadmin</artifactId>
+      <version>${felix-configadmin.version}</version>
+      <scope>provided</scope>
+    </dependency-->
   </dependencies>
 
   <build>
@@ -454,14 +470,20 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <!--<configuration>
           <instructions>
-            &lt;!&ndash;Include-Resource>
-              {maven-dependencies}
-            </Include-Resource&ndash;&gt;
-            <Import-Package>!pt.webdetails.cpf.*,*</Import-Package>
-            &lt;!&ndash;Export-Package>!pt.webdetails.cpf</Export-Package>
-            <Private-Package>!pt.webdetails.cpf</Private-Package&ndash;&gt;
+
           </instructions>
         </configuration>-->
+        <configuration>
+          <instructions>
+            <Include-Resource>{maven-dependencies},styles=${project.build.directory}/classes/styles,xmls=${project.build.directory}/classes/resources</Include-Resource>
+            <!--Import-Package>!pt.webdetails.cpf.*,*</Import-Package-->
+            <!--Export-Package>!pt.webdetails.cpf</Export-Package-->
+            <!--Private-Package>!pt.webdetails.cpf</Private-Package-->
+            <!--Export-Package>org.foo.myproject.api</Export-Package>
+            <Private-Package>org.foo.myproject.*</Private-Package-->
+            <Bundle-Activator>pt.webdetails.cdf.dd.osgi.CdeBundleActivator</Bundle-Activator>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
   </build>
