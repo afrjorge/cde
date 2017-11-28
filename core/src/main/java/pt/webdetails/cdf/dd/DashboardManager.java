@@ -132,8 +132,7 @@ public class DashboardManager {
     throws IOException, FileNotFoundException, JSONException {
     InputStream input = null;
     try {
-      input = new FileInputStream( new File( "/Users/ajorge/Pentaho/ctools/cde/pentaho/solution/" +
-          "pentaho-cdf-dd/pentaho-cdf-dd-require/tests/Raphael/raphael.cdfde"/*dashboardLocation*/ ) );
+      input = new FileInputStream( new File( dashboardLocation ) );
       //input = Utils.getSystemOrUserReadAccess( dashboardLocation ).getFileInputStream( dashboardLocation );
       final JSONObject json = JsonUtils.readJsonFromInputStream( input );
 

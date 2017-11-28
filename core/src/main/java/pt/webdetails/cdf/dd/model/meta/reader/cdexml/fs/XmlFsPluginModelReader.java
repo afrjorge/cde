@@ -131,7 +131,7 @@ public final class XmlFsPluginModelReader {
       //IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
       //Arrays.sort( filesArray, getFileComparator() );
       for ( File file : filesList ) {
-        if (file.getName().toLowerCase().endsWith("component.xml") && file.isFile()) this.readComponentsFile( model, factory, file, DEF_BASE_TYPE, origin );
+        if (file.getName().toLowerCase().endsWith(".xml") && file.isFile()) this.readComponentsFile( model, factory, file, DEF_BASE_TYPE, origin );
       }
     }
   }
