@@ -468,14 +468,9 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <!--<configuration>
-          <instructions>
-
-          </instructions>
-        </configuration>-->
         <configuration>
           <instructions>
-            <Include-Resource>{maven-dependencies},styles=${project.build.directory}/classes/styles,xmls=${project.build.directory}/classes/resources</Include-Resource>
+            <!--Include-Resource>styles=${project.build.directory}/classes/styles,xmls=${project.build.directory}/classes/resources</Include-Resource-->
             <!--Import-Package>!pt.webdetails.cpf.*,*</Import-Package-->
             <!--Export-Package>!pt.webdetails.cpf</Export-Package-->
             <!--Private-Package>!pt.webdetails.cpf</Private-Package-->

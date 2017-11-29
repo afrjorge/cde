@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -170,6 +171,12 @@ public class Utils {
     SAXReader reader = XmlParserFactoryProducer.getSAXReader( resolver );
     String contents = new String( Files.readAllBytes( Paths.get( file.getPath() ) ) );
     return reader.read( Files.newInputStream( Paths.get( file.getPath() ) )/*file.getContents()*/ );
+  }
+
+  public static Document getDocFromURL(final URL url, final EntityResolver resolver )
+      throws DocumentException, IOException {
+    SAXReader reader = XmlParserFactoryProducer.getSAXReader( resolver );
+    return reader.read( url.openStream() );
   }
 
   public static Document getDocument( InputStream input ) throws DocumentException {

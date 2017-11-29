@@ -110,7 +110,6 @@ public final class XmlFsPluginModelReader {
     this.readCustomProperties( model, factory );
 
     // Read Components
-    logger.info( String.format( "Loading BASE components from: %s", BASE_COMPS_DIR ) );
     this.readBaseComponents( model, factory );
     this.readCustomComponents( model, factory );
     //this.readWidgetStubComponents( model, factory );
@@ -120,83 +119,43 @@ public final class XmlFsPluginModelReader {
 
   private void readBaseComponents( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory )
       throws ThingReadException {
-    //List<IBasicFile> filesList = CdeEnvironment.getPluginSystemReader( BASE_COMPS_DIR ).listFiles( null,
-    //  new GenericBasicFileFilter( null, DEFINITION_FILE_EXT ), IReadAccess.DEPTH_ALL );
-    //PathOrigin origin = new StaticSystemOrigin( BASE_COMPS_DIR );
-    PathOrigin origin = new StaticSystemOrigin( "/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/base/components" );
-    Collection<File> filesList = FileUtils.listFiles(
-        new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/base/components"),
-        new String[]{"xml"},
-        true);
+    logger.info( String.format( "Loading BASE components" ) );
 
-    if ( filesList != null ) {
-      //IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
-      //Arrays.sort( filesArray, getFileComparator() );
-      for ( File file : filesList ) {
-        if (file.getName().toLowerCase().endsWith(".xml") && file.isFile()) this.readComponentsFile( model, factory, file, DEF_BASE_TYPE, origin );
-      }
+
+    Enumeration<URL> fileList = CdeBundleActivator.getBundle().findEntries("resources/base/components/", "*.xml", true);
+    if ( fileList != null ) while ( fileList.hasMoreElements() ) {
+      this.readComponent( model, factory, fileList.nextElement(), DEF_BASE_TYPE );
     }
   }
 
   private void readBaseProperties( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory )
     throws ThingReadException {
+    logger.info( String.format( "Loading BASE properties" ) );
 
-    logger.info( String.format( "Loading BASE properties from: %s", BASE_PROPS_DIR ) );
-
-    //List<IBasicFile> filesList = CdeEnvironment.getPluginSystemReader( BASE_PROPS_DIR ).listFiles( null,
-    //  new GenericBasicFileFilter( null, DEFINITION_FILE_EXT ), IReadAccess.DEPTH_ALL );
-    //File[] filesArray = new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/base/properties").listFiles();
-    /*Collection<File> filesList = FileUtils.listFiles(
-        new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/base/properties"),
-        new String[]{"xml"},
-        true);*/
-    Enumeration<URL> filesList = null;
-    try {
-      filesList = CdeBundleActivator.getCdeBundle().getResources("xmls");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    if ( filesList != null ) {
-      //IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
-      //Arrays.sort( filesArray, getFileComparator() );
-      File file;
-      while ( filesList.hasMoreElements() ) {
-        file = new File( filesList.nextElement().getFile() );
-        if (file.getName().toLowerCase().endsWith(".xml") && file.isFile()) this.readPropertiesFile( model, factory, file );
-      }
+    //Enumeration<URL> filesList = CdeBundleActivator.getCdeBundle().getResources("xmls");
+    Enumeration<URL> fileList = CdeBundleActivator.getBundle().findEntries("resources/base/properties/", "*.xml", true);
+    if ( fileList != null ) while ( fileList.hasMoreElements() ) {
+      this.readPropertiesFile( model, factory, fileList.nextElement() );
     }
   }
 
   private void readCustomProperties( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory )
     throws ThingReadException {
+    logger.info( String.format( "Loading CUSTOM properties" ) );
 
-    logger.info( String.format( "Loading CUSTOM properties from: %s", CUSTOM_PROPS_DIR ) );
-
-    //List<IBasicFile> filesList = CdeEnvironment.getPluginSystemReader( CUSTOM_PROPS_DIR ).listFiles( null,
-    //  new GenericBasicFileFilter( CUSTOM_PROPS_FILENAME, DEFINITION_FILE_EXT ), IReadAccess.DEPTH_ALL );
-    //File[] filesArray = new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/custom/properties").listFiles();
-    Collection<File> filesList = FileUtils.listFiles(
-        new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/custom/properties"),
-        new String[]{"xml"},
-        true);
-
-    if ( filesList != null ) {
-      //IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
-      //Arrays.sort( filesArray, getFileComparator() );
-      for ( File file : filesList ) {
-        if (file.getName().toLowerCase().endsWith(".xml") && file.isFile()) this.readPropertiesFile( model, factory, file );
-      }
+    Enumeration<URL> fileList = CdeBundleActivator.getBundle().findEntries("resources/custom/properties/", "*.xml", true);
+    if ( fileList != null ) while ( fileList.hasMoreElements() ) {
+      this.readPropertiesFile( model, factory, fileList.nextElement() );
     }
   }
 
-  private void readPropertiesFile( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory, File file )
+  private void readPropertiesFile( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory, URL url )
     throws ThingReadException {
     Document doc;
     try {
-      doc = Utils.getDocFromFile( file, null );
+      doc = Utils.getDocFromURL( url, null );
     } catch ( Exception ex ) {
-      ThingReadException ex2 = new ThingReadException( "Cannot read properties file '" + file + "'.", ex );
+      ThingReadException ex2 = new ThingReadException( "Cannot read properties file '" + url.getFile() + "'.", ex );
       if ( !this.continueOnError ) {
         throw ex2;
       }
@@ -210,7 +169,7 @@ public final class XmlFsPluginModelReader {
     @SuppressWarnings( "unchecked" )
     List<Element> propertieElems = doc.selectNodes( "//DesignerProperty" );
     for ( Element propertyElem : propertieElems ) {
-      readProperty( model, factory, propertyElem, file );
+      readProperty( model, factory, propertyElem, url );
     }
   }
 
@@ -218,9 +177,9 @@ public final class XmlFsPluginModelReader {
     MetaModel.Builder modelBuilder,
     XmlFsPluginThingReaderFactory factory,
     Element propertyElem,
-    File file ) {
+    URL url ) {
     try {
-      PropertyType.Builder prop = factory.getPropertyTypeReader().read( propertyElem, file.getPath() );
+      PropertyType.Builder prop = factory.getPropertyTypeReader().read( propertyElem, url.getPath() );
       modelBuilder.addProperty( prop );
     } catch ( IllegalArgumentException ex ) {
       if ( !this.continueOnError ) {
@@ -233,32 +192,17 @@ public final class XmlFsPluginModelReader {
   }
 
   private void readCustomComponents( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory )
-    throws ThingReadException {
-    /*for ( PathOrigin origin : CdeEnvironment.getPluginResourceLocationManager().getCustomComponentsLocations() ) {
-      readCustomComponentsLocation( model, factory, origin );
-    }*/
-    readCustomComponentsLocation( model, factory, null );
-  }
+      throws ThingReadException {
+    logger.info( "reading custom components" );
 
-  private void readCustomComponentsLocation( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory,
-                                             PathOrigin origin ) throws ThingReadException {
-    logger.info( "reading custom components from " + origin );
+    Enumeration<URL> fileList = CdeBundleActivator.getBundle().findEntries("resources/custom/components/", "*.xml", true);
+    if ( fileList != null ) while ( fileList.hasMoreElements() ) {
+      this.readComponent( model, factory, fileList.nextElement(), DEF_CUSTOM_TYPE );
+    }
 
-    //GenericBasicFileFilter filter = new GenericBasicFileFilter( COMPONENT_FILENAME, DEFINITION_FILE_EXT );
-    //IReadAccess access = origin.getReader( contentAccessFactory );
-    //List<IBasicFile> filesList = access.listFiles( null, filter, IReadAccess.DEPTH_ALL, false, true );
-    //File[] filesArray = new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/custom/components").listFiles();
-    Collection<File> filesList = FileUtils.listFiles(
-      new File("/Users/ajorge/Pentaho/ctools/stable/cde/cde-core/resource/resources/custom/components"),
-      new String[]{"xml"},
-      true);
-    if ( filesList != null ) {
-      //logger.debug( String.format( "%d sub-folders found", filesList.size() ) );
-      //IBasicFile[] filesArray = filesList.toArray( new IBasicFile[] {} );
-      //Arrays.sort( filesArray, getFileComparator() );
-      for ( File file : filesList ) {
-        this.readComponentsFile( model, factory, file, DEF_CUSTOM_TYPE, origin );
-      }
+    fileList = CdeBundleActivator.getBundle().findEntries("resources/custom/amd-components/", "*.xml", true);
+    if ( fileList != null ) while ( fileList.hasMoreElements() ) {
+      this.readComponent( model, factory, fileList.nextElement(), DEF_CUSTOM_TYPE );
     }
   }
 /*
@@ -404,15 +348,14 @@ public final class XmlFsPluginModelReader {
     };
   }
 
-
-  private void readComponentsFile( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory, File file,
-                                   String defaultClassName, PathOrigin origin )
+  private void readComponent( MetaModel.Builder model, XmlFsPluginThingReaderFactory factory, URL url,
+                                   String defaultClassName )
     throws ThingReadException {
     Document doc;
     try {
-      doc = Utils.getDocFromFile( file, null );
+      doc = Utils.getDocFromURL( url, null );
     } catch ( Exception ex ) {
-      String msg = "Cannot read components file '" + file.getPath() + "'.";
+      String msg = "Cannot read components file '" + url.getPath() + "'.";
 
       if ( !this.continueOnError ) {
         throw new ThingReadException( msg, ex );
@@ -427,11 +370,11 @@ public final class XmlFsPluginModelReader {
     List<Element> componentElems = doc.selectNodes( "//DesignerComponent" );
 
     if ( logger.isDebugEnabled() && componentElems.size() > 0 ) {
-      logger.debug( String.format( "\t%s [%s]", file.getPath(), componentElems.size() ) );
+      logger.debug( String.format( "\t%s [%s]", url.getPath(), componentElems.size() ) );
     }
 
     for ( Element componentElem : componentElems ) {
-      readComponent( model, factory, componentElem, file.getPath(), defaultClassName, origin );
+      readComponent( model, factory, componentElem, url.getPath(), defaultClassName, null );
     }
   }
 

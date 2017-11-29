@@ -342,12 +342,12 @@ public class CdfRunJsDashboardWriter extends JsWriterAbstract implements IThingW
   protected String writeComponentModuleId( Component comp, String className ) {
     StringBuilder componentModuleId = new StringBuilder();
 
-    if ( comp.isPrimitiveComponent() && comp.isComponentStaticSystemOrigin() ) {
+    if ( comp.isPrimitiveComponent() ) {
 
-      // CDF component with a static system origin
-      componentModuleId
-        .append( CDF_AMD_BASE_COMPONENT_PATH )
-        .append( className );
+        // CDF component with a static system origin
+        componentModuleId
+            .append(CDF_AMD_BASE_COMPONENT_PATH)
+            .append(className);
 
     } else if ( comp.isCustomComponent() ) {
 
@@ -395,11 +395,14 @@ public class CdfRunJsDashboardWriter extends JsWriterAbstract implements IThingW
           .append( comp.getPluginIdFromOrigin() )
           .append( PLUGIN_COMPONENT_FOLDER )
           .append( className );
-      } else {
+
+      } else { // TODO: add OSGi System Origin?
+
         // CDE custom component with a static system origin
         componentModuleId
           .append( CDE_AMD_BASE_COMPONENT_PATH )
           .append( className );
+
       }
     } else if ( comp.isWidgetComponent() ) {
       // TODO: process WidgetComponent

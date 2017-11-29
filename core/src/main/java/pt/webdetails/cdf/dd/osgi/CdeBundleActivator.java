@@ -3,19 +3,17 @@ package pt.webdetails.cdf.dd.osgi;
 import org.osgi.framework.*;
 
 public class CdeBundleActivator implements BundleActivator {
-  // context.getBundle().getResources("styles/Clean.html").nextElement().getFile()
-  private static Bundle cdeBundle;
+
+  private static Bundle bundle;
+
   public void start( BundleContext context ) {
-    System.out.println("Hello from CDE!!!!!");
-    cdeBundle = context.getBundle();
+    bundle = context.getBundle();
   }
 
-  public void stop( BundleContext context ) {
-    System.out.println("Goodbye from CDE!!!!!");
-  }
+  public void stop( BundleContext context ) { }
 
-  public static Bundle getCdeBundle() {
-    return cdeBundle;
+  public static Bundle getBundle() {
+    return bundle;
   }
 }
 
