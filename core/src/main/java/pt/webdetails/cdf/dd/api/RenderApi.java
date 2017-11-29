@@ -18,6 +18,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +46,7 @@ import pt.webdetails.cdf.dd.InterPluginBroker;
 import pt.webdetails.cdf.dd.model.core.writer.ThingWriteException;
 import pt.webdetails.cdf.dd.model.inst.writer.cdfrunjs.dashboard.CdfRunJsDashboardWriteOptions;
 import pt.webdetails.cdf.dd.model.inst.writer.cdfrunjs.dashboard.CdfRunJsDashboardWriteResult;
+import pt.webdetails.cdf.dd.osgi.CdeBundleActivator;
 import pt.webdetails.cdf.dd.util.CdeEnvironment;
 import pt.webdetails.cdf.dd.util.Utils;
 import pt.webdetails.cdf.dd.util.CorsUtil;
@@ -96,6 +99,13 @@ public class RenderApi {
       return "Access Denied or File Not Found.";
     }
 */
+    // TODO: OSGi service to provide the dashboard CDFDE/WCDF files?
+    // select the first resource match for the path parameter
+    Enumeration<URL> fileList = CdeBundleActivator.getBundle().findEntries("resources/filter-prompts", "*" + path + ".wcdf", true);
+    if ( fileList != null && fileList.hasMoreElements() ) {
+      path = fileList.nextElement().getPath();
+    }
+
     IParameterProvider requestParams = getParameterProvider( request.getParameterMap() );
 
     try {

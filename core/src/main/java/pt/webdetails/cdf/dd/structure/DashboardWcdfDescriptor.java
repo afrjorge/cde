@@ -31,6 +31,7 @@ import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pt.webdetails.cdf.dd.osgi.CdeBundleActivator;
 import pt.webdetails.cdf.dd.util.Utils;
 import pt.webdetails.cpf.repository.api.IReadAccess;
 
@@ -293,7 +294,7 @@ public class DashboardWcdfDescriptor {
 */
     Document wcdfDoc = null;
     try {
-      wcdfDoc = Utils.getDocFromFile( new File( wcdfFilePath )/*readAccess.fetchFile( wcdfFilePath )*/, null );
+      wcdfDoc = Utils.getDocFromURL( CdeBundleActivator.getBundle().getEntry( wcdfFilePath ), null );
       DashboardWcdfDescriptor wcdf = DashboardWcdfDescriptor.fromXml( wcdfDoc );
       wcdf.setPath( wcdfFilePath );
       return wcdf;

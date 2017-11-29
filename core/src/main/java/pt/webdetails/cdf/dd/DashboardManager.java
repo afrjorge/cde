@@ -56,6 +56,7 @@ import pt.webdetails.cdf.dd.model.inst.writer.cdfrunjs.dashboard.CdfRunJsDashboa
 import pt.webdetails.cdf.dd.model.inst.writer.cdfrunjs.dashboard.CdfRunJsDashboardWriteResult;
 import pt.webdetails.cdf.dd.model.inst.writer.cdfrunjs.legacy.CdfRunJsThingWriterFactory;
 import pt.webdetails.cdf.dd.model.meta.MetaModel;
+import pt.webdetails.cdf.dd.osgi.CdeBundleActivator;
 import pt.webdetails.cdf.dd.render.DependenciesManager;
 import pt.webdetails.cdf.dd.structure.DashboardWcdfDescriptor;
 import pt.webdetails.cdf.dd.structure.DashboardWcdfDescriptor.DashboardRendererType;
@@ -132,7 +133,7 @@ public class DashboardManager {
     throws IOException, FileNotFoundException, JSONException {
     InputStream input = null;
     try {
-      input = new FileInputStream( new File( dashboardLocation ) );
+      input = CdeBundleActivator.getBundle().getEntry( dashboardLocation ).openStream();
       //input = Utils.getSystemOrUserReadAccess( dashboardLocation ).getFileInputStream( dashboardLocation );
       final JSONObject json = JsonUtils.readJsonFromInputStream( input );
 
