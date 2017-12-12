@@ -294,7 +294,7 @@ public class DashboardWcdfDescriptor {
 */
     Document wcdfDoc = null;
     try {
-      wcdfDoc = Utils.getDocFromURL( CdeBundleActivator.getBundle().getEntry( wcdfFilePath ), null );
+      wcdfDoc = Utils.getDocFromURL( CdeBundleActivator.getResourcePath( wcdfFilePath ).get("wcdf"), null );
       DashboardWcdfDescriptor wcdf = DashboardWcdfDescriptor.fromXml( wcdfDoc );
       wcdf.setPath( wcdfFilePath );
       return wcdf;

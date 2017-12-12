@@ -133,8 +133,7 @@ public class DashboardManager {
     throws IOException, FileNotFoundException, JSONException {
     InputStream input = null;
     try {
-      input = CdeBundleActivator.getBundle().getEntry( dashboardLocation ).openStream();
-      //input = Utils.getSystemOrUserReadAccess( dashboardLocation ).getFileInputStream( dashboardLocation );
+      input = CdeBundleActivator.getResourcePath( dashboardLocation ).get("cdfde").openStream();
       final JSONObject json = JsonUtils.readJsonFromInputStream( input );
 
       if ( wcdf != null ) {
@@ -164,7 +163,7 @@ public class DashboardManager {
 
     // Figure out what dashboard we should be handling: load its wcdf descriptor.
     DashboardWcdfDescriptor wcdf;
-    if ( !wcdfFilePath.isEmpty() && wcdfFilePath.endsWith( ".wcdf" ) ) {
+    if ( !wcdfFilePath.isEmpty() ) {
       try {
         wcdf = DashboardWcdfDescriptor.load( wcdfFilePath );
       } catch ( IOException ex ) {
