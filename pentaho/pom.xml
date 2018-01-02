@@ -11,7 +11,6 @@
   <version>8.1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>Pentaho Community Dashboard Editor for Pentaho Server</description>
-
   <modules>
     <module>impl</module>
   </modules>

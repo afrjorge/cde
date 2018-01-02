@@ -9,13 +9,11 @@
   </parent>
   <artifactId>cde-components-amd-platform</artifactId>
   <version>8.1.0.0-SNAPSHOT</version>
-  <description>Pentaho Community Dashboard Editor AMD Custom Components</description>
+  <description>Pentaho Community Dashboard Editor AMD Custom Components for the Pentaho Platform</description>
   <packaging>pom</packaging>
-
   <properties>
     <js.project.list>pentaho-cdf-js,cde-components-amd-impls-core,cde-components-amd-impls-pentaho</js.project.list>
   </properties>
-
   <dependencies>
     <dependency>
       <groupId>pentaho</groupId>
@@ -54,7 +52,6 @@
       </exclusions>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
