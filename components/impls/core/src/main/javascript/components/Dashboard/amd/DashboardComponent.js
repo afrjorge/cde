@@ -89,7 +89,10 @@ define([
             if(myself.isParameterPublic(otherParam)) {
               var eventName = myParam + ":fireChange";
               var fun = function(evt) {
-                if((!myself._pause) && (reqDash.getParameterValue(otherParam) !== evt.value)) {
+                if((!myself._pause) &&
+                  // TODO: added deep comparison to avoid infinite loop after bubbling up the param change event
+                  JSON.stringify(reqDash.getParameterValue(otherParam)) !== JSON.stringify(evt.value)) {
+
                   myself.loopThroughMapping(function(myParam, otherParam) {
                     reqDash.setParameter(otherParam, myself.dashboard.getParameterValue(myParam));
                   });
@@ -98,10 +101,13 @@ define([
               };
               myself.dashboard.on(eventName, fun);
               reqDash.on(otherParam + ":fireChange", function (evt) {
-                if((!myself._pause) && (myself.oneWayMap == false) && (myself.dashboard.getParameterValue(myParam) !== evt.value)) {
-                  myself.loopThroughMapping(function(myParam, otherParam) {
-                    myself.dashboard.setParameter(myParam, reqDash.getParameterValue(otherParam));
-                  });
+                if(!myself._pause && myself.oneWayMap == false) { // eslint-disable-line eqeqeq
+                  // TODO: moved value comparison to allow bubbling up the param change event
+                  if(JSON.stringify(myself.dashboard.getParameterValue(myParam)) !== JSON.stringify(evt.value)) {
+                    myself.loopThroughMapping(function(myParam, otherParam) {
+                      myself.dashboard.setParameter(myParam, reqDash.getParameterValue(otherParam));
+                    });
+                  }
                   myself.dashboard.fireChange(myParam, evt.value);
                 }
               });
