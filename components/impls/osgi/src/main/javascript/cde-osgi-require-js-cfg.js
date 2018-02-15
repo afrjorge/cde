@@ -15,20 +15,6 @@
 
   requireCfg.config = requireCfg.config || {};
 
-  var prefix;
-  if(typeof KARMA_RUN !== "undefined") { // unit tests
-    requireCfg.paths['cde'] = 'src/main/javascript';
-
-  } else if(typeof CONTEXT_PATH !== "undefined") { // production
-    prefix = CONTEXT_PATH;
-
-  } else if(typeof FULL_QUALIFIED_URL !== "undefined") { // embedded
-    prefix = FULL_QUALIFIED_URL;
-
-  } else { // build
-    requireCfg.paths['cde'] = 'cde';
-  }
-
   // configure the CDE endpoint to be used by the dash! loader plugin
   requireCfg.config['dash'] = {
     'endpoint': '/cxf/cde/renderer/getDashboard?path='
