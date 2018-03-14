@@ -98,7 +98,7 @@ define([
                   });
                   reqDash.fireChange(otherParam, evt.value);
                 }
-              };
+              }.bind(myself);
               myself.dashboard.on(eventName, fun);
               reqDash.on(otherParam + ":fireChange", function (evt) {
                 if(!myself._pause && myself.oneWayMap == false) {
